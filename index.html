@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduGenie - AI Learning Assistant</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>🎓 EduGenie</h1>
+
+        <p class="subtitle">
+            Google Gemini Powered Learning Assistant
+        </p>
+
+        <div class="card">
+
+            <h2>Ask EduGenie</h2>
+
+            <textarea
+                id="question"
+                placeholder="Ask your question here..."
+            ></textarea>
+
+            <button onclick="askQuestion()">
+                Ask EduGenie
+            </button>
+
+            <div id="answer"></div>
+
+        </div>
+<div class="quiz-card">
+
+    <h2>📝 Quiz Generator</h2>
+
+    <textarea
+        id="quizTopic"
+        placeholder="Enter a topic for quiz..."
+    ></textarea>
+
+    <button onclick="generateQuiz()">
+        Generate Quiz
+    </button>
+
+    <div id="quizAnswer"></div>
+
+</div>
+<div class="learning-card">
+
+    <h2>📚 Personalized Learning Path</h2>
+
+    <textarea
+        id="learningTopic"
+        placeholder="Enter a topic you want to learn..."
+    ></textarea>
+
+    <button onclick="generateLearningPath()">
+        Create Learning Path
+    </button>
+
+    <div id="learningAnswer"></div>
+
+</div>
+<div class="summary-card">
+
+    <h2>📖 Text Summarizer</h2>
+
+    <textarea
+        id="summaryText"
+        placeholder="Paste your educational text here..."
+    ></textarea>
+
+    <button onclick="summarizeText()">
+        Summarize
+    </button>
+
+    <div id="summaryAnswer"></div>
+
+</div>
+        <div class="features">
+
+            <div class="feature">
+                <h3>💡 Smart Answers</h3>
+                <p>Get simple explanations for difficult concepts.</p>
+            </div>
+
+            <div class="feature">
+                <h3>📝 Quiz Generator</h3>
+                <p>Generate quizzes from your study topics.</p>
+            </div>
+
+            <div class="feature">
+                <h3>📚 Learning Path</h3>
+                <p>Get personalized learning recommendations.</p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        async function askQuestion() {
+
+            const question = document.getElementById("question").value;
+            const answer = document.getElementById("answer");
+
+            if (!question.trim()) {
+                answer.innerHTML = "<p>Please enter a question.</p>";
+                return;
+            }
+
+            answer.innerHTML = "<p>Thinking... 🤔</p>";
+
+            try {
+
+                const response = await fetch("/ask", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        question: question
+                    })
+                });
+
+                const data = await response.json();
+
+                answer.innerHTML = `
+                    <h3>Answer:</h3>
+                    <p>${data.answer}</p>
+                `;
+
+            } catch (error) {
+
+                answer.innerHTML =
+                    "<p>Something went wrong. Please try again.</p>";
+
+            }
+        }
+async function generateQuiz() {
+
+    const topic = document.getElementById("quizTopic").value;
+    const quizAnswer = document.getElementById("quizAnswer");
+
+    if (!topic.trim()) {
+        quizAnswer.innerHTML = "<p>Please enter a topic.</p>";
+        return;
+    }
+
+    quizAnswer.innerHTML = "<p>Generating quiz... 🤔</p>";
+
+    try {
+
+        const response = await fetch("/quiz", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                question: topic
+            })
+        });
+
+        const data = await response.json();
+
+        quizAnswer.innerHTML = `
+            <h3>Quiz:</h3>
+            <p>${data.quiz}</p>
+        `;
+
+    } catch (error) {
+
+        quizAnswer.innerHTML =
+            "<p>Something went wrong. Please try again.</p>";
+
+    }
+}
+async function generateLearningPath() {
+
+    const topic = document.getElementById("learningTopic").value;
+    const learningAnswer = document.getElementById("learningAnswer");
+
+    if (!topic.trim()) {
+        learningAnswer.innerHTML = "<p>Please enter a topic.</p>";
+        return;
+    }
+
+    learningAnswer.innerHTML = "<p>Creating your learning path... 🤔</p>";
+
+    try {
+
+        const response = await fetch("/learning-path", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                question: topic
+            })
+        });
+
+        const data = await response.json();
+
+        learningAnswer.innerHTML = `
+            <h3>Learning Path:</h3>
+            <p>${data.learning_path}</p>
+        `;
+
+    } catch (error) {
+
+        learningAnswer.innerHTML =
+            "<p>Something went wrong. Please try again.</p>";
+
+    }
+}
+async function summarizeText() {
+
+    const text = document.getElementById("summaryText").value;
+    const summaryAnswer = document.getElementById("summaryAnswer");
+
+    if (!text.trim()) {
+        summaryAnswer.innerHTML = "<p>Please enter some text.</p>";
+        return;
+    }
+
+    summaryAnswer.innerHTML = "<p>Summarizing... 🤔</p>";
+
+    try {
+
+        const response = await fetch("/summarize", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                question: text
+            })
+        });
+
+        const data = await response.json();
+
+        summaryAnswer.innerHTML = `
+            <h3>Summary:</h3>
+            <p>${data.summary}</p>
+        `;
+
+    } catch (error) {
+
+        summaryAnswer.innerHTML =
+            "<p>Something went wrong. Please try again.</p>";
+
+    }
+}
+    </script>
+
+</body>
+</html>
